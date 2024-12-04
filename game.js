@@ -59,6 +59,7 @@ let game = {
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
                 this.blocks.push({
+                    active: true,
                     width: 60,
                     height: 20,
                     x: 64 * col + 65,
@@ -69,18 +70,20 @@ let game = {
     },
 
     update() {
-        this.platform.move();
-        this.ball.move();
         this.collideBlocks();
         this.collidePlatform();
+        this.platform.move();
+        this.ball.move();
     },
+
     collideBlocks() {
         for (let block of this.blocks) {
-            if (this.ball.collide(block)) {
+            if (block.active && this.ball.collide(block)) {
                 this.ball.bumpBlock(block);
             }
         }
     },
+
     collidePlatform() {
         if (this.ball.collide(this.platform)) {
             this.ball.bumpPlatform(this.platform);
@@ -96,7 +99,7 @@ let game = {
     },
 
     render() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.clearRect(0, 0, this.width, this.height)
         this.ctx.drawImage(this.sprites.background, 0, 0);
         this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
         this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
@@ -105,7 +108,9 @@ let game = {
 
     renderBlocks() {
         for (let block of this.blocks) {
-            this.ctx.drawImage(this.sprites.block, block.x, block.y);
+            if (block.active) {
+                this.ctx.drawImage(this.sprites.block, block.x, block.y);
+            }
         }
     },
 
@@ -116,7 +121,6 @@ let game = {
             this.run();
         });
     },
-
     random(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -133,7 +137,7 @@ game.ball = {
 
     start() {
         this.dy = -this.velocity;
-        this.dx = game.random(-this.velocity, this.velocity);
+        this.dx = game.random(-this.velocity, this.velocity)
     },
 
     move() {
@@ -153,13 +157,13 @@ game.ball = {
             x < element.x + element.width &&
             y + this.height > element.y &&
             y < element.y + element.height) {
-            return true;
-        }
+                return true;
+            }
         return false;
     },
-
     bumpBlock(block) {
         this.dy *= -1;
+        block.active = false
     },
     bumpPlatform(platform) {
         this.dy *= -1;
@@ -204,11 +208,12 @@ game.platform = {
             }
         }
     },
+
     getTouchOffset(x) {
         let diff = (this.x + this.width) - x;
         let offset = this.width - diff;
         let result = 2 * offset / this.width;
-        return result - 1
+        return result - 1;
     }
 };
 
