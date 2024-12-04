@@ -11,7 +11,7 @@ let game = {
     ball: null,
     blocks: [],
     score: 0,
-    rows: 4,
+    rows: 5,
     cols: 8,
     width: 640,
     height: 360,
@@ -22,7 +22,7 @@ let game = {
         block: null
     },
     sounds: {
-        bump: null,
+        pew: null,
     },
 
     init() {
@@ -113,7 +113,7 @@ let game = {
             if (block.active && this.ball.collide(block)) {
                 this.ball.bumpBlock(block);
                 this.addScore();
-                this.sounds.bump.play();
+                this.sounds.pew.play();
             }
         }
     },
@@ -121,7 +121,7 @@ let game = {
     collidePlatform() {
         if (this.ball.collide(this.platform)) {
             this.ball.bumpPlatform(this.platform);
-            this.sounds.bump.play();
+            this.sounds.pew.play();
         }
     },
 
@@ -138,7 +138,7 @@ let game = {
     render() {
         this.ctx.clearRect(0, 0, this.width, this.height)
         this.ctx.drawImage(this.sprites.background, 0, 0);
-        this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height,
+        this.ctx.drawImage(this.sprites.ball, this.ball.frame * this.ball.width, 0, this.ball.width, this.ball.height,
             this.ball.x, this.ball.y, this.ball.width, this.ball.height);
         this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
         this.renderBlocks();
@@ -176,7 +176,7 @@ game.ball = {
     dx: 0,
     dy: 0,
     frame: 0,
-    velocity: 3,
+    velocity: 4.25,
     x: 320,
     y: 280,
     width: 20,
@@ -235,15 +235,15 @@ game.ball = {
         if (ballLeft < worldLeft) {
             this.x = 0; 
             this.dx = this.velocity;
-            game.sounds.bump.play();
+            game.sounds.pew.play();
         } else if (ballRight > worldRight) {
             this.x = worldRight - this.width;
             this.dx = -this.velocity;
-            game.sounds.bump.play();
+            game.sounds.pew.play();
         } else if (ballTop < worldTop) {
             this.y = 0;
             this.dy = this.velocity;
-            game.sounds.bump.play();
+            game.sounds.pew.play();
         } else if (ballBottom > worldBottom) {
             game.running = false;
             alert("вы проиграли");
