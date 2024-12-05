@@ -148,12 +148,8 @@ let game = {
     renderBlocks() {
         for (let block of this.blocks) {
             if (block.active) {
-<<<<<<< HEAD
-                this.ctx.drawImage(this.sprites.block, block.x, block.y);
-=======
                 this.ctx.fillStyle = "#a0203a";  
                 this.ctx.fillRect(block.x, block.y, block.width, block.height);
->>>>>>> ab1efa8 (final version of game)
             }
         }
     },
